@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eres muy importante para mí</title>
+  
+  <!-- Librería externa para el efecto de confeti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Estilos Generales */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fdf8f4;
+      color: #4a3e3d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #2c2c2c;
+      max-width: 90%;
+      line-height: 1.4;
+    }
+
+    /* Lista animada de razones */
+    .reasons-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 15px 0;
+    }
+
+    .reasons-list li {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 10px 0;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.8s ease-in-out;
+    }
+
+    .reasons-list li.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sub-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #7d5260;
+      margin-top: 15px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .sub-text.visible {
+      opacity: 1;
+    }
+
+    .highlight-text {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #d81b60;
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      max-width: 90%;
+      line-height: 1.3;
+    }
+
+    .highlight-text.visible {
+      opacity: 1;
+    }
+
+    /* --- Contenedor de Gerberas --- */
+    .bouquet-container {
+      width: 240px;
+      height: 250px;
+      position: relative;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    /* Maceta */
+    .pot {
+      width: 110px;
+      height: 70px;
+      background: #c86d51;
+      position: absolute;
+      bottom: 0;
+      left: 65px;
+      border-radius: 5px 5px 15px 15px;
+      box-shadow: inset 0 -5px 0 rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
+    /* Tallos */
+    .stem {
+      width: 8px;
+      height: 0px; /* Crece con JS */
+      background: #4caf50;
+      position: absolute;
+      bottom: 65px;
+      border-radius: 4px;
+      transition: height 1.5s ease-in-out;
+    }
+
+    .stem-1 { left: 80px; transform: rotate(-18deg); transform-origin: bottom center; }
+    .stem-2 { left: 116px; }
+    .stem-3 { left: 152px; transform: rotate(18deg); transform-origin: bottom center; }
+
+    /* --- Cabeza de Gerbera --- */
+    .gerbera-head {
+      width: 70px;
+      height: 70px;
+      position: absolute;
+      transform: scale(0); /* Crece con JS */
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .gerbera-1 { top: 35px; left: 45px; }
+    .gerbera-2 { top: 10px; left: 85px; }
+    .gerbera-3 { top: 35px; left: 125px; }
+
+    .gerbera-center {
+      width: 20px;
+      height: 20px;
+      background: #3e2723;
+      border-radius: 50%;
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      z-index: 2;
+    }
+
+    .g-petal {
+      width: 12px;
+      height: 30px;
+      border-radius: 6px;
+      position: absolute;
+      top: 20px;
+      left: 29px;
+      transform-origin: center bottom;
+    }
+
+    /* Colores por flor */
+    .yellow-flower .g-petal { background: #ffeb3b; }
+    .pink-flower .g-petal   { background: #e91e63; }
+    .orange-flower .g-petal { background: #ff9800; }
+
+    /* Disposición circular de los pétalos de Gerberas */
+    .g-petal:nth-child(1)  { transform: translateY(-15px) rotate(0deg); }
+    .g-petal:nth-child(2)  { transform: translateY(-15px) rotate(30deg); }
+    .g-petal:nth-child(3)  { transform: translateY(-15px) rotate(60deg); }
+    .g-petal:nth-child(4)  { transform: translateY(-15px) rotate(90deg); }
+    .g-petal:nth-child(5)  { transform: translateY(-15px) rotate(120deg); }
+    .g-petal:nth-child(6)  { transform: translateY(-15px) rotate(150deg); }
+    .g-petal:nth-child(7)  { transform: translateY(-15px) rotate(180deg); }
+    .g-petal:nth-child(8)  { transform: translateY(-15px) rotate(210deg); }
+    .g-petal:nth-child(9)  { transform: translateY(-15px) rotate(240deg); }
+    .g-petal:nth-child(10) { transform: translateY(-15px) rotate(270deg); }
+    .g-petal:nth-child(11) { transform: translateY(-15px) rotate(300deg); }
+    .g-petal:nth-child(12) { transform: translateY(-15px) rotate(330deg); }
+  </style>
+</head>
+<body>
+
+  <h1>Quiero que sepas que eres muy importante para mí porque...</h1>
+
+  <ul class="reasons-list">
+    <li>Eres Hermosa</li>
+    <li>Eres Divertida</li>
+    <li>Eres Inteligente</li>
+    <li>Eres auténtica</li>
+    <li>Eres Gruñona</li>
+  </ul>
+
+  <p class="sub-text" id="subText">pero sobre todo...</p>
+  <p class="highlight-text" id="finalText">¡porque eres La PRINCESA de Daddy no olvides que me encantas y que te amo un montón!</p>
+
+  <!-- Ramo de Gerberas Multinivel -->
+  <div class="bouquet-container" onclick="lanzarConfeti()">
+    
+    <!-- Tallos -->
+    <div class="stem stem-1" id="stem1"></div>
+    <div class="stem stem-2" id="stem2"></div>
+    <div class="stem stem-3" id="stem3"></div>
+
+    <!-- Gerbera 1: Amarilla -->
+    <div class="gerbera-head gerbera-1 yellow-flower" id="g1">
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="gerbera-center"></div>
+    </div>
+
+    <!-- Gerbera 2: Rosa -->
+    <div class="gerbera-head gerbera-2 pink-flower" id="g2">
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="gerbera-center"></div>
+    </div>
+
+    <!-- Gerbera 3: Naranja -->
+    <div class="gerbera-head gerbera-3 orange-flower" id="g3">
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="g-petal"></div><div class="g-petal"></div>
+      <div class="gerbera-center"></div>
+    </div>
+
+    <!-- Maceta -->
+    <div class="pot"></div>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const items = document.querySelectorAll('.reasons-list li');
+      const subText = document.getElementById('subText');
+      const finalText = document.getElementById('finalText');
+      
+      const stems = [document.getElementById('stem1'), document.getElementById('stem2'), document.getElementById('stem3')];
+      const flowers = [document.getElementById('g1'), document.getElementById('g2'), document.getElementById('g3')];
+
+      // 1. Mostrar las razones una a una
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('visible');
+        }, (index + 1) * 800);
+      });
+
+      const totalListTime = (items.length + 1) * 800;
+
+      // 2. Texto "pero sobre todo..."
+      setTimeout(() => {
+        subText.classList.add('visible');
+      }, totalListTime);
+
+      // 3. Texto final
+      setTimeout(() => {
+        finalText.classList.add('visible');
+      }, totalListTime + 1000);
+
+      // 4. Crecer los tallos
+      setTimeout(() => {
+        stems.forEach(stem => stem.style.height = '120px');
+      }, totalListTime + 1800);
+
+      // 5. Florecer gerberas y lanzar confeti
+      setTimeout(() => {
+        flowers.forEach(flower => flower.style.transform = 'scale(1)');
+        lanzarConfeti();
+      }, totalListTime + 3000);
+    });
+
+    function lanzarConfeti() {
+      confetti({
+        particleCount: 130,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    }
+  </script>
+</body>
+</html>
