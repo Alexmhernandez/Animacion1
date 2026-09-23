@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Te amo porque...</title>
+  <title>Eres muy importante para mí</title>
   
   <!-- Librería externa para el efecto de confeti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Estilos generales */
+    /* Estilos Generales */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #fdf8f4;
@@ -26,38 +26,52 @@
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 20px;
+      font-size: 1.6rem;
+      margin-bottom: 25px;
       color: #2c2c2c;
+      max-width: 90%;
+      line-height: 1.4;
     }
 
     /* Lista animada */
     .reasons-list {
       list-style: none;
       padding: 0;
-      margin: 0 0 25px 0;
+      margin: 0 0 20px 0;
     }
 
     .reasons-list li {
       font-size: 1.25rem;
       font-weight: 600;
-      margin: 10px 0;
+      margin: 12px 0;
       opacity: 0;
       transform: translateY(15px);
       transition: all 0.8s ease-in-out;
     }
 
-    /* Clase que activa la aparición con JS */
     .reasons-list li.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .highlight-text {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #b86b35;
+    .sub-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #7d5260;
       margin-top: 15px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .sub-text.visible {
+      opacity: 1;
+    }
+
+    .highlight-text {
+      font-size: 1.35rem;
+      font-weight: bold;
+      color: #c2185b;
+      margin-top: 10px;
       opacity: 0;
       transition: opacity 1s ease-in-out;
     }
@@ -66,148 +80,160 @@
       opacity: 1;
     }
 
-    /* Animación del tallo y flor */
-    .flower-container {
-      width: 150px;
-      height: 220px;
+    /* --- Contenedor del Ramo de Rosas --- */
+    .rose-bouquet-container {
+      width: 200px;
+      height: 250px;
       position: relative;
-      margin-top: 10px;
+      margin-top: 20px;
       cursor: pointer;
     }
 
-    /* Maceta */
+    /* Maceta Común */
     .pot {
       width: 100px;
       height: 70px;
       background: #c86d51;
       position: absolute;
       bottom: 0;
-      left: 25px;
+      left: 50px;
       border-radius: 5px 5px 15px 15px;
       box-shadow: inset 0 -5px 0 rgba(0,0,0,0.1);
+      z-index: 10;
     }
 
-    /* Tallo */
+    /* Tallos individuales */
     .stem {
-      width: 10px;
+      width: 8px;
       height: 0px; /* Crece con JS */
       background: #4caf50;
       position: absolute;
       bottom: 65px;
-      left: 70px;
-      border-radius: 5px;
+      border-radius: 4px;
       transition: height 1.5s ease-in-out;
     }
 
-    /* Flor */
-    .flower-head {
-      width: 80px;
-      height: 80px;
+    /* Posiciones de los tallos */
+    .stem-1 { left: 75px; transform: rotate(-15deg); transform-origin: bottom center; }
+    .stem-2 { left: 96px; }
+    .stem-3 { left: 117px; transform: rotate(15deg); transform-origin: bottom center; }
+
+    /* --- Estructura de la Rosa Roja --- */
+    .rose-head {
+      width: 50px;
+      height: 50px;
       position: absolute;
-      top: 15px;
-      left: 35px;
       transform: scale(0); /* Crece con JS */
       transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .center {
-      width: 35px;
-      height: 35px;
-      background: #5d4037;
-      border-radius: 50%;
+    /* Posiciones de los capullos de rosa */
+    .rose-1 { top: 35px; left: 50px; }
+    .rose-2 { top: 15px; left: 75px; }
+    .rose-3 { top: 35px; left: 100px; }
+
+    .rose-petal {
       position: absolute;
-      top: 22.5px;
-      left: 22.5px;
-      z-index: 2;
+      background: #d32f2f;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     }
 
-    .petal {
-      width: 30px;
-      height: 30px;
-      background: #fbc02d;
-      border-radius: 50%;
-      position: absolute;
-      top: 25px;
-      left: 25px;
-    }
+    /* Capas de pétalos para dar efecto de rosa */
+    .r-outer { width: 44px; height: 44px; top: 3px; left: 3px; background: #c62828; }
+    .r-mid { width: 30px; height: 30px; top: 10px; left: 10px; background: #e53935; }
+    .r-inner { width: 18px; height: 18px; top: 16px; left: 16px; background: #ff5252; border-radius: 50%; }
 
-    /* Posicionamiento de los pétalos */
-    .petal:nth-child(1) { transform: translate(0, -25px); }
-    .petal:nth-child(2) { transform: translate(18px, -18px); }
-    .petal:nth-child(3) { transform: translate(25px, 0); }
-    .petal:nth-child(4) { transform: translate(18px, 18px); }
-    .petal:nth-child(5) { transform: translate(0, 25px); }
-    .petal:nth-child(6) { transform: translate(-18px, 18px); }
-    .petal:nth-child(7) { transform: translate(-25px, 0); }
-    .petal:nth-child(8) { transform: translate(-18px, -18px); }
   </style>
 </head>
 <body>
 
-  <h1>Te amo porque:</h1>
+  <h1>Quiero que sepas que eres muy importante para mí porque...</h1>
 
   <ul class="reasons-list">
-    <li>Sos hermosa</li>
-    <li>Sos divertida</li>
-    <li>Sos mi hogar</li>
-    <li>Sos auténtica</li>
-    <li>Sos inspiradora</li>
+    <li>Eres Hermosa</li>
+    <li>Eres Divertida</li>
+    <li>Eres mi pequeñita hermosa</li>
+    <li>Eres auténtica</li>
   </ul>
 
-  <p class="highlight-text" id="finalText">Pero sobre todo te amo...</p>
+  <p class="sub-text" id="subText">pero sobre todo...</p>
+  <p class="highlight-text" id="finalText">¡porque eres MÍA, no olvides que me encantas bb!</p>
 
-  <!-- Dibujo de la Flor -->
-  <div class="flower-container" onclick="lanzarConfeti()">
-    <div class="flower-head" id="flowerHead">
-      <div class="petal"></div><div class="petal"></div>
-      <div class="petal"></div><div class="petal"></div>
-      <div class="petal"></div><div class="petal"></div>
-      <div class="petal"></div><div class="petal"></div>
-      <div class="center"></div>
+  <!-- Ramo de Rosas Rojas -->
+  <div class="rose-bouquet-container" onclick="lanzarConfeti()">
+    
+    <!-- Tallos -->
+    <div class="stem stem-1" id="stem1"></div>
+    <div class="stem stem-2" id="stem2"></div>
+    <div class="stem stem-3" id="stem3"></div>
+
+    <!-- Capullos de Rosa -->
+    <div class="rose-head rose-1" id="rose1">
+      <div class="rose-petal r-outer"></div>
+      <div class="rose-petal r-mid"></div>
+      <div class="rose-petal r-inner"></div>
     </div>
-    <div class="stem" id="stem"></div>
+    <div class="rose-head rose-2" id="rose2">
+      <div class="rose-petal r-outer"></div>
+      <div class="rose-petal r-mid"></div>
+      <div class="rose-petal r-inner"></div>
+    </div>
+    <div class="rose-head rose-3" id="rose3">
+      <div class="rose-petal r-outer"></div>
+      <div class="rose-petal r-mid"></div>
+      <div class="rose-petal r-inner"></div>
+    </div>
+
+    <!-- Maceta -->
     <div class="pot"></div>
   </div>
 
   <script>
-    // Secuencia de animación paso a paso
     window.addEventListener('DOMContentLoaded', () => {
       const items = document.querySelectorAll('.reasons-list li');
+      const subText = document.getElementById('subText');
       const finalText = document.getElementById('finalText');
-      const stem = document.getElementById('stem');
-      const flowerHead = document.getElementById('flowerHead');
+      
+      const stems = [document.getElementById('stem1'), document.getElementById('stem2'), document.getElementById('stem3')];
+      const roses = [document.getElementById('rose1'), document.getElementById('rose2'), document.getElementById('rose3')];
 
-      // 1. Mostrar las frases una por una
+      // 1. Mostrar las razones una a una
       items.forEach((item, index) => {
         setTimeout(() => {
           item.classList.add('visible');
-        }, (index + 1) * 700); // 700ms entre cada frase
+        }, (index + 1) * 800); // 800ms de pausa entre cada frase
       });
 
-      // 2. Mostrar la frase final
-      const totalTimeList = (items.length + 1) * 700;
+      const totalListTime = (items.length + 1) * 800;
+
+      // 2. Mostrar el texto "pero sobre todo..."
+      setTimeout(() => {
+        subText.classList.add('visible');
+      }, totalListTime);
+
+      // 3. Mostrar el texto final
       setTimeout(() => {
         finalText.classList.add('visible');
-      }, totalTimeList);
+      }, totalListTime + 1000);
 
-      // 3. Hacer crecer el tallo
+      // 4. Hacer crecer los tallos
       setTimeout(() => {
-        stem.style.height = '110px';
-      }, totalTimeList + 600);
+        stems.forEach(stem => stem.style.height = '120px');
+      }, totalListTime + 1800);
 
-      // 4. Abrir la flor y lanzar el confeti automáticamente
+      // 5. Florecer las tres rosas rojas + lanzar confeti
       setTimeout(() => {
-        flowerHead.style.transform = 'scale(1)';
+        roses.forEach(rose => rose.style.transform = 'scale(1)');
         lanzarConfeti();
-      }, totalTimeList + 2000);
+      }, totalListTime + 3000);
     });
 
     // Función de confeti
     function lanzarConfeti() {
       confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.7 }
+        particleCount: 120,
+        spread: 90,
+        origin: { y: 0.6 }
       });
     }
   </script>
