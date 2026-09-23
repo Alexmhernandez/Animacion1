@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Te amo porque...</title>
+  
+  <!-- Librería externa para el efecto de confeti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #fdf8f4;
+      color: #4a3e3d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #2c2c2c;
+    }
+
+    /* Lista animada */
+    .reasons-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 25px 0;
+    }
+
+    .reasons-list li {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 10px 0;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.8s ease-in-out;
+    }
+
+    /* Clase que activa la aparición con JS */
+    .reasons-list li.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .highlight-text {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #b86b35;
+      margin-top: 15px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .highlight-text.visible {
+      opacity: 1;
+    }
+
+    /* Animación del tallo y flor */
+    .flower-container {
+      width: 150px;
+      height: 220px;
+      position: relative;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    /* Maceta */
+    .pot {
+      width: 100px;
+      height: 70px;
+      background: #c86d51;
+      position: absolute;
+      bottom: 0;
+      left: 25px;
+      border-radius: 5px 5px 15px 15px;
+      box-shadow: inset 0 -5px 0 rgba(0,0,0,0.1);
+    }
+
+    /* Tallo */
+    .stem {
+      width: 10px;
+      height: 0px; /* Crece con JS */
+      background: #4caf50;
+      position: absolute;
+      bottom: 65px;
+      left: 70px;
+      border-radius: 5px;
+      transition: height 1.5s ease-in-out;
+    }
+
+    /* Flor */
+    .flower-head {
+      width: 80px;
+      height: 80px;
+      position: absolute;
+      top: 15px;
+      left: 35px;
+      transform: scale(0); /* Crece con JS */
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .center {
+      width: 35px;
+      height: 35px;
+      background: #5d4037;
+      border-radius: 50%;
+      position: absolute;
+      top: 22.5px;
+      left: 22.5px;
+      z-index: 2;
+    }
+
+    .petal {
+      width: 30px;
+      height: 30px;
+      background: #fbc02d;
+      border-radius: 50%;
+      position: absolute;
+      top: 25px;
+      left: 25px;
+    }
+
+    /* Posicionamiento de los pétalos */
+    .petal:nth-child(1) { transform: translate(0, -25px); }
+    .petal:nth-child(2) { transform: translate(18px, -18px); }
+    .petal:nth-child(3) { transform: translate(25px, 0); }
+    .petal:nth-child(4) { transform: translate(18px, 18px); }
+    .petal:nth-child(5) { transform: translate(0, 25px); }
+    .petal:nth-child(6) { transform: translate(-18px, 18px); }
+    .petal:nth-child(7) { transform: translate(-25px, 0); }
+    .petal:nth-child(8) { transform: translate(-18px, -18px); }
+  </style>
+</head>
+<body>
+
+  <h1>Te amo porque:</h1>
+
+  <ul class="reasons-list">
+    <li>Sos hermosa</li>
+    <li>Sos divertida</li>
+    <li>Sos mi hogar</li>
+    <li>Sos auténtica</li>
+    <li>Sos inspiradora</li>
+  </ul>
+
+  <p class="highlight-text" id="finalText">Pero sobre todo te amo...</p>
+
+  <!-- Dibujo de la Flor -->
+  <div class="flower-container" onclick="lanzarConfeti()">
+    <div class="flower-head" id="flowerHead">
+      <div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div>
+      <div class="petal"></div><div class="petal"></div>
+      <div class="center"></div>
+    </div>
+    <div class="stem" id="stem"></div>
+    <div class="pot"></div>
+  </div>
+
+  <script>
+    // Secuencia de animación paso a paso
+    window.addEventListener('DOMContentLoaded', () => {
+      const items = document.querySelectorAll('.reasons-list li');
+      const finalText = document.getElementById('finalText');
+      const stem = document.getElementById('stem');
+      const flowerHead = document.getElementById('flowerHead');
+
+      // 1. Mostrar las frases una por una
+      items.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('visible');
+        }, (index + 1) * 700); // 700ms entre cada frase
+      });
+
+      // 2. Mostrar la frase final
+      const totalTimeList = (items.length + 1) * 700;
+      setTimeout(() => {
+        finalText.classList.add('visible');
+      }, totalTimeList);
+
+      // 3. Hacer crecer el tallo
+      setTimeout(() => {
+        stem.style.height = '110px';
+      }, totalTimeList + 600);
+
+      // 4. Abrir la flor y lanzar el confeti automáticamente
+      setTimeout(() => {
+        flowerHead.style.transform = 'scale(1)';
+        lanzarConfeti();
+      }, totalTimeList + 2000);
+    });
+
+    // Función de confeti
+    function lanzarConfeti() {
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.7 }
+      });
+    }
+  </script>
+</body>
+</html>
